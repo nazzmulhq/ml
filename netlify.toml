@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/ml-crash-course-bangla.html"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/ml-crash-course-bangla"
+  to = "/"
+  status = 301
