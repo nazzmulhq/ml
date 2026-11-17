@@ -71,7 +71,7 @@
   color-scheme: dark;
 }
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+html { scroll-padding-top: 72px; }
 body {
   margin: 0;
   background: var(--bg);
@@ -178,7 +178,7 @@ tbody tr:hover td { background: var(--accent-tint); }
 .quiz-title::before { content: "✎ "; }
 
 /* figures */
-.figure { margin: 18px 0; padding: 12px; background: var(--surface); border: 1px solid var(--grid); border-radius: 12px; box-shadow: var(--shadow); }
+.figure { margin: 18px 0; padding: 12px; background: var(--surface); border: 1px solid var(--grid); border-radius: 12px; box-shadow: var(--shadow); content-visibility: auto; contain-intrinsic-size: 0 380px; }
 .figure svg { width: 100%; height: auto; display: block; font-family: inherit; }
 .figure figcaption { font-size: 13px; color: var(--muted); text-align: center; margin-top: 6px; }
 
@@ -299,7 +299,7 @@ pre.code code { background: none; border: none; padding: 0; font-size: inherit; 
 .w-out { font-size: 15px; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); }
 .w-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 10px; }
 .w-grid svg, .widget svg { width: 100%; height: auto; display: block; }
-@media (max-width: 640px) { .w-grid { grid-template-columns: minmax(0,1fr); } .w-row input[type=range] { width: 150px; } .widget { padding: 12px 10px; } .figure { overflow-x: auto; } .figure .chart { min-width: 520px; } .figure figcaption { position: sticky; left: 0; max-width: calc(100vw - 58px); } }
+@media (max-width: 640px) { .w-grid { grid-template-columns: minmax(0,1fr); } .w-row input[type=range] { width: 150px; } .widget { padding: 12px 10px; } .figure { overflow-x: auto; } .figure figcaption { position: sticky; left: 0; max-width: calc(100vw - 58px); } }
 @media print {
   .js .qz-why { display: block; }
   .qz-all, .widget { display: none; }
@@ -7855,13 +7855,21 @@ min_diff_model.fit(acs_train_min_diff_ds, epochs=EPOCHS)</code></pre>
   });
 
   var prog = document.getElementById('progress'), top = document.getElementById('toTop');
-  window.addEventListener('scroll', function () {
+  var scrollTicking = false;
+  function updateScrollUi() {
     var h = document.documentElement;
     var pct = h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) * 100;
     prog.style.width = pct + '%';
     top.classList.toggle('show', h.scrollTop > 600);
+    scrollTicking = false;
+  }
+  window.addEventListener('scroll', function () {
+    if (!scrollTicking) {
+      scrollTicking = true;
+      requestAnimationFrame(updateScrollUi);
+    }
   }, { passive: true });
-  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  top.addEventListener('click', function () { window.scrollTo({ top: 0 }); });
 
   // sidebar: highlight current page
   var links = {};
